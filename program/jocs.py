@@ -1,64 +1,117 @@
+#Creem funció Janken.
+
 def janken ():
    
-   from robot import playing #Importem la funció corresponent a la tria del contrincant.
-   
-   from main import Main
+    #IMPORTEM LES FUNCIONS I MÈTODES NECESSARIS.
+    from robot import playing #Importem la funció corresponent a la tria del contrincant.
 
-   def joc():
-       
-       contadorUsuari = 0
-       contadorRobot = 0
+    from time import sleep
 
-       
-       
-#Obtenir input usuari i robot. Fer casos amb if i sumar-li al jugador corresponent 1p.
+    r=robot.robot() #crea instància de robot.
 
-   def victoriaDe3():
-       
-       contadorUsuari = 0
-       contadorRobot = 0
-
-       for i in range(2):
-           
-           joc()
-
-   def millorDe5():
-       
-       contadorUsuari = 0
-       contadorRobot = 0
-       
-       while contadorUsuari <3 or contadorRobot <3:
-
-            #Obtenir input usuari i robot. Fer casos amb if i sumar-li al jugador corresponent 1p.
+    p=r.playing() #crido mètode playing de robot. 
     
+    #r2=robot.robot() <-- Així crearia instància 2 de robot, així puc fer que 2 robots juguin.
+     
+    def joc():
+        
+        movUsuariValid = False
 
-   modeJoc = input(f"Benvingut al joc de pedra, paper, tisora. Tria el mode de joc: \n 3.El primer que arribi a 3 victòries. \n 5.Al millor de 5 rondes. \n S.Sortir")
+        while movUsuariValid == False:
+            
+            movUsuari = input(f"Tria el teu pròxim moviment escrivint alguna de les paraules següents a la consola: \n 1.Pedra 💎 \n 2.Paper 🧻  \n 3.Tisores ✂ ").lower().strip()
+            
+            if movUsuari == "pedra" or movUsuari == "paper" or movUsuari == "tisores":
 
-   match modeJoc:
-       
-       case "3":
-           
-           print(f"Has escollit l'opció \"El primer que arribi a 3 victòries.\" ")
+                movUsuariValid = True
 
-       case "5":
-           
-           print(f"Has escollit l'opció \"Al millor de 5 rondes.\" ")
+                print("Pedra, paper, tisores!")
 
-       case "S":
-           
-           print("Has escollit l'opció de sortir. Ara retornaràs al menú principal.")
-           return
-           Main()
+                sleep (3)
 
-       case _:
-           
-           print(f"L'opció introduïda no és vàlida. \n ")
+                print(f"El teu moviment és {movUsuari}")        
+
+                sleep (3)
+
+                print(f"El moviment del robot és {p}")
+
+                sleep (3)
+
+                #Casos en els que es guanya: 
+
+                victories = [
+                ("pedra", "tisores"),
+                ("paper", "pedra"),
+                ("tisores", "paper")
+                ]
+
+                if movUsuari == p:
+                    
+                    print("Empat!")
+
+
+                elif (movUsuari, p) in victories:
+                    
+                    print("Has guanyat!")
+                    
+
+                
+                else:
+                    
+                    print("Has perdut!")
+
+
+
+                
+
+
 
 
         
-   
+        
+        
+        
 
-#moviment = input(f"Benvingut al joc de pedra, paper, tisora. \n Tria el teu moviment: \n 1.Pedra \n 2.Paper \n 3.Tisora \n S.Sortir")
+
+
+        
+
+    #TRIA DEL MODE DE JOC.
+    modeValid = False
+
+    while modeValid != False:
+             
+        modeJoc= input(f"Tria el mode de joc: \n 3.El primer que arribi a 3 victòries. \n 5.El millor de 5 jugades. \n S.Sortir").lower().strip()
+        
+        if modeJoc == "3" or modeJoc == "5" or modeJoc == "s":
+        
+            modeValid = True
+
+            #Creem contadors per als punts de l'usuari i el robot.
+
+            puntsUsuari = 0
+            puntsRobot = 0
+
+            match modeJoc:
+                case "3": #El primer que arribi a 3 victòries.
+                    
+                    
+                    
+                    for i in range(3): #Repetim el joc 3 cops (escrivim 2 perque compta des de 0)
+            
+                        joc()
+
+                case "5": #5.El millor de 5 jugades.
+                    
+                    
+
+                    for i in range(5): #Repetim el joc 5 cops (escrivim 4 perque compta des de 0)
+            
+                        joc()
+
+                case "s":
+                    print("Has escollit sortir del joc. A continuació es tancarà. Fins a la pròxima!")
+        
 
    
 
