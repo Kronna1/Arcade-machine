@@ -1,167 +1,178 @@
-#Creem funció Janken.
+from random import randint # Importem la funció per obtenir un integer (enter) aleatori.
+from time import sleep
+from robot import robot # Importem la funció corresponent a la tria del contrincant.
 
+
+# Funció que juga una partida de pedra / paper / tisores i retorna el guanyador.
+def janken_play(r): 
+    # Per comoditat, assigno llista de moviments a una nova variable.
+    movs = r.game
+
+    # Demanem moviment a l'usuari
+    while True:
+        mov_usuari = input(f"\nTria el teu pròxim moviment escrivint alguna de les paraules següents a la consola:\n  Pedra\n  Paper\n  Tisora\n").strip().lower()
+        
+        # Si el moviment triat es troba a la llista de moviments comença el joc.
+        if mov_usuari in movs:
+            print(f"\nPedra, paper, tisores!")
+            sleep (2)
+
+            # El robot fa el seu moviment.
+            mov_robot = r.playing()
+
+            print(f"El teu moviment és {mov_usuari}\nEl moviment de {r.name} és {mov_robot}")        
+            sleep (2)
+
+            # Si el jugador empata amb el robot...
+            if mov_usuari == mov_robot:
+                print(f"Empat!")
+                return "empat"
+
+            # Fixant-me, la llista de moviments està ordenada de forma que el moviment posterior és el guanyador del anterior
+            # així que si movem l'índex de la llista una posició podem obtenir el seu contramoviment.
+            # Si moviment del jugador es igual a contramoviment del robot guanyes.
+            elif mov_usuari == movs[(movs.index(mov_robot) + 1) % len(movs)]:
+                print(f"Has guanyat!")
+                return "jugador"
+
+            # Sino, has perdut.
+            else:
+                print(f"Has perdut!") 
+                return "robot"
+        
+        # En cas de que el moviment NO es trobi a la llista (moviment NO vàlid), es torna a demanar.
+        else:
+            print("L'input introduït NO és vàlid. Torna-ho a provar.")
+
+
+# Juguem pedra / paper / tisores
 def janken ():
-   
-    #IMPORTEM LES FUNCIONS I MÈTODES NECESSARIS.
-    from robot import playing #Importem la funció corresponent a la tria del contrincant.
 
-    from time import sleep
+    # Creem una instància de robot.
+    r = robot()
 
-    r=robot.robot() #crea instància de robot.
+    # Definim la puntuació i el comptador d'empats.
+    punts_usuari = 0
+    punts_robot = 0
+    empats = 0
 
-    p=r.playing() #crido mètode playing de robot. 
+    # Demanem el mode de joc.
+    while True:
+        mode = input(f"\nTria el mode de joc:\n  1.El primer que arribi a 3 victòries.\n  2.El millor de 5 jugades.\n  s.Sortir\n").strip().lower()
+
+        match mode:
+            
+            # El primer que arribi a 3 victòries.
+            case "1": 
+
+                # Juguem fins que algun jugador te 3 punts
+                while punts_usuari < 3 and punts_robot < 3:
+        
+                    # Juguem una partida i sumem els punts al jugador corresponent.
+                    resultat = janken_play(r)
+
+                    if resultat == "empat":
+                        empats += 1
+                    elif resultat == "jugador":
+                        punts_usuari += 1
+                    else:
+                        punts_robot += 1
+
+                    # Imprimim el estat de la partida
+                    sleep (2)
+                    print(f"\nEstat del joc:\n  Empats: {empats}\n  Punts del jugador: {punts_usuari}\n  Punts de {r.name}: {punts_robot}")
+
+            # El millor de 5 jugades.
+            case "2":
+
+                # juguem 5 rondes
+                for i in range(5):
+                    
+                    # Juguem una partida i sumem els punts al jugador corresponent.
+                    resultat = janken_play(r)
+
+                    if resultat == "empat":
+                        empats += 1
+                    elif resultat == "jugador":
+                        punts_usuari += 1
+                    else:
+                        punts_robot += 1
+
+                    # Imprimim el estat de la partida
+                    sleep (2)
+                    print(f"\nEstat del joc:\n  Ronda {i + 1}\n  Empats: {empats}\n  Punts del jugador: {punts_usuari}\n  Punts de {r.name}: {punts_robot}")
+
+            # Sortim del selector de mode al menú principal.
+            case "s":
+                print("Has escollit sortir del joc. A continuació es surtirà al menú principal. Fins a la pròxima!")
+                break
+            
+            # El mode no existeix, es torna a intentar.
+            case _:
+                print("L'input introduït NO és vàlid. Torna-ho a provar.")
+                continue
+        
+        # Es dona el guanyador a l'acabar un joc.
+        sleep (2)
+        print(f"\nFi de la partida:")
+
+        if punts_usuari == punts_robot:
+            print(f"Heu empatat!")
+
+        if punts_usuari > punts_robot:
+            print("Feliciats, has guanyat!")
+
+        else:
+            print("Has perdut!")
+
+        sleep (2)
+        break
+
+
+# Juguem a averiguar un número.
+def nana(): 
     
-    #r2=robot.robot() <-- Així crearia instància 2 de robot, així puc fer que 2 robots juguin.
-     
-    def joc():
+    # Generem un nombre aleatori entre 1 i 100.
+    numero_generat = randint(1,100) 
+
+    # Creem un comptador d'intents.
+    intents = 0 
+
+    # Comença el joc.
+    while True:
+
+        # Demanem un número a l'usuari.
+        numero_averigua = input(f"\nHe pensat un nombre entre 1 i 100. Prova d'endevinar-lo.\n")
+
+        # Comprovem que l'input de l'usuari és un número.
+        if numero_averigua.isnumeric():
         
-        movUsuariValid = False
+            # Afegim 1 al comptador d'intents i convertim l'input de l'usuari en un número.
+            intents += 1
+            numero_averigua = int(numero_averigua)
 
-        while movUsuariValid == False:
-            
-            movUsuari = input(f"Tria el teu pròxim moviment escrivint alguna de les paraules següents a la consola: \n 1.Pedra 💎 \n 2.Paper 🧻  \n 3.Tisores ✂ ").lower().strip()
-            
-            if movUsuari == "pedra" or movUsuari == "paper" or movUsuari == "tisores":
+            # Comprobem que el número estigui entre l'1 i 100.
+            if numero_averigua > 100 or numero_averigua < 1: 
 
-                movUsuariValid = True
-
-                print("Pedra, paper, tisores!")
-
-                sleep (3)
-
-                print(f"El teu moviment és {movUsuari}")        
-
-                sleep (3)
-
-                print(f"El moviment del robot és {p}")
-
-                sleep (3)
-
-                #Casos en els que es guanya: 
-
-                victories = [
-                ("pedra", "tisores"),
-                ("paper", "pedra"),
-                ("tisores", "paper")
-                ]
-
-                if movUsuari == p:
-                    
-                    print("Empat!")
-
-
-                elif (movUsuari, p) in victories:
-                    
-                    print("Has guanyat!")
-                    
-
-                
-                else:
-                    
-                    print("Has perdut!")
-
-
-
-                
-
-
-
-
-        
-        
-        
-        
-
-
-
-        
-
-    #TRIA DEL MODE DE JOC.
-    modeValid = False
-
-    while modeValid != False:
-             
-        modeJoc= input(f"Tria el mode de joc: \n 3.El primer que arribi a 3 victòries. \n 5.El millor de 5 jugades. \n S.Sortir").lower().strip()
-        
-        if modeJoc == "3" or modeJoc == "5" or modeJoc == "s":
-        
-            modeValid = True
-
-            #Creem contadors per als punts de l'usuari i el robot.
-
-            puntsUsuari = 0
-            puntsRobot = 0
-
-            match modeJoc:
-                case "3": #El primer que arribi a 3 victòries.
-                    
-                    
-                    
-                    for i in range(3): #Repetim el joc 3 cops (escrivim 2 perque compta des de 0)
-            
-                        joc()
-
-                case "5": #5.El millor de 5 jugades.
-                    
-                    
-
-                    for i in range(5): #Repetim el joc 5 cops (escrivim 4 perque compta des de 0)
-            
-                        joc()
-
-                case "s":
-                    print("Has escollit sortir del joc. A continuació es tancarà. Fins a la pròxima!")
-        
-
-   
-
-
-
-
-
-
-
-
-
-def nana(): #Definim la funció nana, a dins programem el joc d'averiguar el número.
-
-    import random #Importem la funció random de Python (per això no cal definir from).
-    
-    numeroGenerat = random.randint(1,100) #Generem una variable on guardem un nombre aleatori comprés entre 1 i 100.
-
-    numeroIntent = 0 #Creem una variable amb valor inicial 0 per fer un comptador d'intents.
-
-    while True: #Creem un bucle infinit.
-
-        numeroAverigua = int(input("He pensat un nombre entre 1 i 100. Prova d'endevinar-lo."))
-        
-        #Mostrem un missatge en pantalla
-        #Demanem input a l'usuari, que guardem a la variable averigua
-        #I castejem l'input a un numero per poder comparar averigua amb numeroGenerat 
-
-        if numeroAverigua.is_integer == False: #Si l'input no és un nombre...
-
-            numeroAverigua = int(input(f"He pensat un nombre entre 1 i 100. Prova d'endevinar-lo. \n INTRODUEIX UN NOMBRE."))
-            #Tornem a demanar input a l'usuari.
-
-        else: #Si l'input es pot castejar a número, (per tant, és un nº)...
-
-            numeroIntent += 1; #Afegim 1 al comptador numeroIntent.
-
-            if numeroAverigua > 200 or numeroAverigua <1: #Si l'input és +gran que 200 o +petit que 1...
-
-                print ("L'input és massa gran o petit. Torna-ho a intentar. És un número entre 1 i 100.")
+                print (f"L'input és massa gran o petit. Torna-ho a intentar. És un número entre 1 i 100.")
             
             else:
-                 
-                if numeroAverigua > numeroGenerat:
+                
+                # Imprimim el resultat del joc al jugador
+                if numero_averigua > numero_generat:
                     print ("Massa alt!")
             
-                elif numeroAverigua < numeroGenerat:
-                    
+                elif numero_averigua < numero_generat:
                     print ("Massa baix!")
                 
-                else :
-                    
-                    print (f"Felicitats! Has encertat en el teu intent número {numeroIntent}!")
+                else:
+                    print (f"\nFelicitats! Has encertat en el teu intent número {intents}!")
+                    sleep (2)
                     break
+            
+            
+        # L'input del jugador NO és un número, es torna a demanar.
+        else:
+            print("L'input introduït NO és vàlid. Torna-ho a provar.")
+            
+            
