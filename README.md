@@ -13,8 +13,10 @@
 
 - main.py (construeix el menú general i crida les funcions de joc.py)
 <br>
+
 - jocs.py (fitxer en el que s'importen les llibreries i mètodes necessaris per executar els jocs)
 <br>
+
 - robot.py (arxiu donat pel professorat en el que es crea un robot "contrincant virtual" per jugar a Janken)
 
 Per executar el programa és necessari descarregar els 3 fitxers, però només executar en terminal main.py (ja que la resta només defineixen funcions i mètodes).
