@@ -20,7 +20,7 @@
 - robot.py (arxiu donat pel professorat en el que es crea un robot "contrincant virtual" per jugar a Janken)
 
 Per executar el programa és necessari descarregar els 3 fitxers, però només executar en terminal main.py (ja que la resta només defineixen funcions i mètodes).
-
+<br>
 En primer lloc es mostrarà un menú amb diverses opcions:
 1. Janken (pedra/paper/tisora)
 <br>
